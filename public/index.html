@@ -7,30 +7,33 @@
 </head>
 <body>
 <h2>Upload a File</h2>
-<form id="uploadForm">
-  <label for="fileInput">Choose file to upload:</label>
-  <input type="file" name="file" id="fileInput" required>
+<form id="uploadForm" enctype="multipart/form-data">
+  <input type="file" name="upfile" id="fileInput" required>
   <button type="submit">Upload</button>
 </form>
 <pre id="result"></pre>
 
 <script>
-  const form = document.getElementById('uploadForm');
-  const result = document.getElementById('result');
+const form = document.getElementById('uploadForm');
+const result = document.getElementById('result');
 
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const fileInput = document.getElementById('fileInput');
-    const formData = new FormData();
-    formData.append('file', fileInput.files[0]);
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const fileInput = document.getElementById('fileInput');
+  const formData = new FormData();
+  formData.append('upfile', fileInput.files[0]);
 
-    const res = await fetch('/api/upload', {
+  try {
+    const res = await fetch('/api/fileanalyse', {
       method: 'POST',
       body: formData
     });
     const data = await res.json();
     result.textContent = JSON.stringify(data, null, 2);
-  });
+  } catch (err) {
+    result.textContent = 'Error uploading file';
+  }
+});
 </script>
 </body>
 </html>
